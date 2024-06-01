@@ -5,7 +5,10 @@
   "description": "A virtual ecommerce website using Node js, Express js, and Mongoose.",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "test": "mocha",
+    "test:integration": "mocha tests/integration.test.js",
+    "test:all": "npm run test && npm run test:integration"
   },
   "author": "Maryam Aljanabi",
   "license": "MIT",
@@ -46,5 +49,10 @@
     "slugify": "^1.6.5",
     "stripe": "^8.219.0",
     "styled-components": "^5.3.5"
+  },
+  "devDependencies": {
+    "chai": "^5.1.1",
+    "mocha": "^10.4.0",
+    "supertest": "^7.0.0"
   }
 }
