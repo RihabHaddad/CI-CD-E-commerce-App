@@ -6,9 +6,11 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "mocha",
+    "test": "mocha tests/**/*.js",
     "test:integration": "mocha tests/integration.test.js",
     "test:all": "npm run test && npm run test:integration"
+  
+  
   },
   "author": "Maryam Aljanabi",
   "license": "MIT",
