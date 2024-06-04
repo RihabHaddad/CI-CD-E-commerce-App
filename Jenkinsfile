@@ -7,6 +7,7 @@ pipeline {
         SCANNER_HOME = tool name: 'SonarQubeScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
         SONARQUBE_TOKEN_ID = 'sonarqube-token'
         KUBECONFIG_CREDENTIALS_ID = 'kubeconfig-credentials'
+        KUBECONFIG = '/var/jenkins_home/kubeconfigs/kubeconfig'
     }
 
     tools {
