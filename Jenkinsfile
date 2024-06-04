@@ -63,7 +63,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS_ID, passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                         docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS_ID) {
-                            def image = docker.build("rihab26/e-commerceAPP:${env.BUILD_NUMBER}")
+                            def image = docker.build("rihab26/e-commerceapp:${env.BUILD_NUMBER}")
                             image.push()
                         }
                     }
