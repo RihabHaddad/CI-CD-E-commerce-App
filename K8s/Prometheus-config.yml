@@ -25,4 +25,4 @@ data:
             action: replace
             target_label: instance
             regex: (.+)
-            replacement: $1  
+            replacement: $1

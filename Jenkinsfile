@@ -17,11 +17,8 @@ pipeline {
         stage('Git') {
             steps {
                 echo 'Getting project from Git'
-                git branch: 'main', url: 'https://github.com/RihabHaddad/CI-CD-E-commerce-App.git', credentialsId: 'your-credentials-id', 
-                changelog: false, poll: false, depth: 1, quiet: true, sparseCheckoutPaths: [], 
-                gitTool: 'Default', extensions: [[$class: 'CloneOption', timeout: 30, noTags: false, shallow: true, reference: '', honorRefspec: true], 
-                [$class: 'CheckoutOption', timeout: 30]]
-    }
+                git branch: 'main', url: 'https://github.com/RihabHaddad/CI-CD-E-commerce-App.git', credentialsId: 'your-credentials-id'
+            }
         }
         stage('Build') {
             steps {
@@ -86,7 +83,6 @@ pipeline {
         }
         stage('End-to-End Tests') {
             steps {
-                
                 sh 'npm run test:e2e'
             }
         }
