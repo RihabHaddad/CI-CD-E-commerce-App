@@ -5,7 +5,7 @@ let server;
 
 beforeAll(async () => {
   if (mongoose.connection.readyState === 0) {
-    await mongoose.connect('mongodb://localhost:27017/testdb', { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect('mongodb://localhost:27017/testdbbb', { useNewUrlParser: true, useUnifiedTopology: true });
   }
   server = app.listen(4000); // Use a different port for testing
 });
