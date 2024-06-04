@@ -15,12 +15,14 @@ pipeline {
 
     stages {
         stage('Git') {
-             steps {
-                   echo 'Getting project from Git'
-                   git branch: 'main', url: 'git@github.com:RihabHaddad/CI-CD-E-commerce-App.git'
+            steps {
+                echo 'Getting project from Git'
+                git branch: 'main', url: 'https://github.com/RihabHaddad/CI-CD-E-commerce-App.git', credentialsId: 'your-credentials-id', 
+                changelog: false, poll: false, depth: 1, quiet: true, sparseCheckoutPaths: [], 
+                gitTool: 'Default', extensions: [[$class: 'CloneOption', timeout: 30, noTags: false, shallow: true, reference: '', honorRefspec: true], 
+                [$class: 'CheckoutOption', timeout: 30]]
     }
-}
-
+        }
         stage('Build') {
             steps {
                 script {
