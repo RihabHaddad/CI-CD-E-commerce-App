@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Product = require("../models/product");
-const Category = require("../models/category");
+const Category = require("../models/category.js");
 var moment = require("moment");
 
 // GET: display all products

@@ -5,11 +5,12 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+
 const session = require("express-session");
 const passport = require("passport");
 const flash = require("connect-flash");
-const Category = require("./models/category");
-var MongoStore = require("connect-mongo")(session);
+const Category = require("./models/category.js");
+const MongoStore = require("connect-mongo")(session);
 const connectDB = require("./config/db");
 
 const app = express();
@@ -17,6 +18,7 @@ require("./config/passport");
 
 // mongodb configuration
 connectDB();
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -32,13 +34,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
+    secret: process.env.SESSION_SECRET || 'defaultsecret',
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
     }),
-    //session expires after 3 hours
-    cookie: { maxAge: 60 * 1000 * 60 * 3 },
+    cookie: { maxAge: 60 * 1000 * 60 * 3 }, // session expires after 3 hours
   })
 );
 app.use(flash());
@@ -62,11 +64,11 @@ app.use(async (req, res, next) => {
 
 // add breadcrumbs
 get_breadcrumbs = function (url) {
-  var rtn = [{ name: "Home", url: "/" }],
-    acc = "", // accumulative url
-    arr = url.substring(1).split("/");
+  const rtn = [{ name: "Home", url: "/" }];
+  let acc = ""; // accumulative url
+  const arr = url.substring(1).split("/");
 
-  for (i = 0; i < arr.length; i++) {
+  for (let i = 0; i < arr.length; i++) {
     acc = i != arr.length - 1 ? acc + "/" + arr[i] : null;
     rtn[i + 1] = {
       name: arr[i].charAt(0).toUpperCase() + arr[i].slice(1),
@@ -80,7 +82,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-//routes config
+// routes config
 const indexRouter = require("./routes/index");
 const productsRouter = require("./routes/products");
 const usersRouter = require("./routes/user");
@@ -106,10 +108,13 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-var port = process.env.PORT || 3000;
-app.set("port", port);
-app.listen(port, () => {
-  console.log("Server running at port " + port);
-});
+// Start server only if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  const port = process.env.PORT || 3001;
+  app.set("port", port);
+  app.listen(port, () => {
+    console.log("Server running at port " + port);
+  });
+}
 
 module.exports = app;

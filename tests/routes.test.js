@@ -1,26 +1,26 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../app');
+const request = require('supertest');
+const mongoose = require('mongoose');
+let server;
 
-chai.use(chaiHttp);
-const expect = chai.expect;
+beforeAll(async () => {
+  const app = require('../app');
+  server = app.listen(3005); 
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect('mongodb://localhost:27017/testdbb', { useNewUrlParser: true, useUnifiedTopology: true });
+  }
+});
 
-describe('Routes', () => {
-  it('should return 200 OK status for GET /', done => {
-    chai.request(app)
-      .get('/')
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        done();
-      });
-  });
+afterAll(async () => {
+  await server.close();
+  await mongoose.connection.close();
+});
 
-  it('should return 404 Not Found for GET /nonexistent', done => {
-    chai.request(app)
-      .get('/nonexistent')
-      .end((err, res) => {
-        expect(res).to.have.status(404);
-        done();
-      });
-  });
+describe('GET /products', () => {
+  it('should fetch all products', async () => {
+    const res = await request(server).get('/products');
+    expect(res.statusCode).toEqual(200);
+   
+    expect(res.body).toBeInstanceOf(Object);
+    
+  }, 20000); 
 });

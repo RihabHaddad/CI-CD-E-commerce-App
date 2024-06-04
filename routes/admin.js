@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const Product = require("../models/product");
 const User = require("../models/user");
 const Order = require("../models/order");
-const Category = require("../models/category");
+const Category = require("../models/category.js");
 AdminBro.registerAdapter(AdminBroMongoose);
 
 const express = require("express");

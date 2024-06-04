@@ -5,7 +5,8 @@ pipeline {
         SONARQUBE_ENV = 'SonarQube'
         DOCKERHUB_CREDENTIALS_ID = 'dockerhub-credentials'
         SCANNER_HOME = tool name: 'SonarQubeScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-        SONARQUBE_TOKEN_ID = 'sonarqube-token' 
+        SONARQUBE_TOKEN_ID = 'sonarqube-token'
+        KUBECONFIG_CREDENTIALS_ID = 'kubeconfig-credentials'
     }
 
     tools {
@@ -39,8 +40,8 @@ pipeline {
         }
         stage('Code Quality') {
             steps {
-                sh 'java -version'  
-                sh 'ls -l $SCANNER_HOME/bin/sonar-scanner'  
+                sh 'java -version'
+                sh 'ls -l $SCANNER_HOME/bin/sonar-scanner'
                 withSonarQubeEnv(SONARQUBE_ENV) {
                     withCredentials([string(credentialsId: SONARQUBE_TOKEN_ID, variable: 'SONARQUBE_TOKEN')]) {
                         sh '''
@@ -65,6 +66,38 @@ pipeline {
                             def image = docker.build("rihab26/e-commerceAPP:${env.BUILD_NUMBER}")
                             image.push()
                         }
+                    }
+                }
+            }
+        }
+        stage('Deploy to Staging') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
+                        sh 'kubectl apply -f K8s/Namespace.yaml'
+                        sh 'kubectl apply -f K8s/Deployment.yaml'
+                        sh 'kubectl apply -f K8s/Service.yaml'
+                    }
+                }
+            }
+        }
+        stage('End-to-End Tests') {
+            steps {
+                
+                sh 'npm run test:e2e'
+            }
+        }
+        stage('Deploy to Production') {
+            when {
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                }
+            }
+            steps {
+                script {
+                    withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
+                        sh 'kubectl apply -f K8s/Deployment.yaml'
+                        sh 'kubectl apply -f K8s/Service.yaml'
                     }
                 }
             }

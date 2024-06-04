@@ -6,11 +6,10 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "mocha tests/**/*.js",
-    "test:integration": "mocha tests/integration.test.js",
-    "test:all": "npm run test && npm run test:integration"
-  
-  
+    "test": "jest",
+    "test:unit": "jest tests/category.test.js",
+    "test:integration": "jest tests/routes.test.js",
+    "test:e2e": "jest tests/e2e.test.js"
   },
   "author": "Maryam Aljanabi",
   "license": "MIT",
@@ -24,6 +23,7 @@
     "connect-flash": "^0.1.1",
     "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "csurf": "^1.11.0",
     "debug": "~2.6.9",
     "dotenv": "^8.6.0",
@@ -50,11 +50,10 @@
     "session": "^0.1.0",
     "slugify": "^1.6.5",
     "stripe": "^8.219.0",
-    "styled-components": "^5.3.5"
+    "styled-components": "^5.3.5",
+    "supertest": "^7.0.0"
   },
   "devDependencies": {
-    "chai": "^5.1.1",
-    "mocha": "^10.4.0",
-    "supertest": "^7.0.0"
+    "jest": "^29.7.0"
   }
 }

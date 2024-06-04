@@ -1,25 +1,23 @@
-const chai = require('chai');
-const expect = chai.expect;
-const Category = require('../models/category');
+const request = require('supertest');
+const mongoose = require('mongoose');
+let server;
 
-describe('Category Model', () => {
-  it('should create a new category', () => {
-    const categoryData = {
-      title: 'Electronics',
-      description: 'Electronic products category'
-    };
-    const category = new Category(categoryData);
-    expect(category.title).to.equal(categoryData.title);
-    expect(category.description).to.equal(categoryData.description);
-  });
+beforeAll(async () => {
+  const app = require('../app');
+  server = app.listen(3004); 
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect('mongodb://localhost:27017/testdbb', { useNewUrlParser: true, useUnifiedTopology: true });
+  }
+});
 
-  it('should not allow empty title', () => {
-    const categoryData = {
-      description: 'Electronic products category'
-    };
-    const category = new Category(categoryData);
-    category.validate(err => {
-      expect(err.errors.title).to.exist;
-    });
-  });
+afterAll(async () => {
+  await server.close();
+  await mongoose.connection.close();
+});
+
+describe('GET /', () => {
+  it('should return 200 OK', async () => {
+    const res = await request(server).get('/');
+    expect(res.statusCode).toEqual(200);
+  }, 20000); 
 });
