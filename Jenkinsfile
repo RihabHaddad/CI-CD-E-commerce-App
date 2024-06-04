@@ -15,11 +15,12 @@ pipeline {
 
     stages {
         stage('Git') {
-            steps {
-                echo 'Getting project from Git'
-                git branch: 'main', url: 'https://github.com/RihabHaddad/CI-CD-E-commerce-App.git'
-            }
-        }
+             steps {
+                   echo 'Getting project from Git'
+                   git branch: 'main', url: 'git@github.com:RihabHaddad/CI-CD-E-commerce-App.git'
+    }
+}
+
         stage('Build') {
             steps {
                 script {
