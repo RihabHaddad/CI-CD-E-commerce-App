@@ -6,6 +6,7 @@ pipeline {
         SCANNER_HOME = tool name: 'SonarQubeScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
         SONARQUBE_TOKEN_ID = 'sonarqube-token'
         KUBECONFIG_CREDENTIALS_ID = 'kubeconfig'
+         DOCKERHUB_CREDENTIALS_ID = 'dockerhub-credentials'
     }
 
     tools {
@@ -27,7 +28,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    docker.build('test-node-app')
+                    docker.build('rihab26/e-commerceapp:latest')
                 }
             }
         }
@@ -67,7 +68,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS_ID, passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                         docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS_ID) {
-                            def image = docker.build("rihab26/e-commerceapp:latest")
+                            def image = docker.image('rihab26/e-commerceapp:latest')
                             image.push()
                         }
                     }
