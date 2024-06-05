@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: ecommerce-app
-        image: rihab26/e-commerceapp:27
+        image: rihab26/e-commerceapp:latest
         ports:
         - containerPort: 3000
         env:
