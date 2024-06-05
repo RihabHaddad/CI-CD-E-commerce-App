@@ -20,7 +20,8 @@ pipeline {
                 deleteDir()
             }
         }
-        steps {
+        stage('Git') {
+            steps {
                 echo 'Getting project from Git'
                 checkout([$class: 'GitSCM',
                     branches: [[name: '*/main']],
@@ -31,7 +32,6 @@ pipeline {
                 ])
             }
         }
-        
         stage('Build') {
             steps {
                 script {
@@ -119,4 +119,4 @@ pipeline {
             cleanWs()
         }
     }
-
+}
