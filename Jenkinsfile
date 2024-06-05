@@ -7,7 +7,7 @@ pipeline {
         SCANNER_HOME = tool name: 'SonarQubeScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
         SONARQUBE_TOKEN_ID = 'sonarqube-token'
         KUBECONFIG_CREDENTIALS_ID = 'kubeconfig-credentials'
-        KUBECONFIG = '/var/jenkins_home/kubeconfigs/kubeconfig'
+        KUBECONFIG = credentials('kubeconfig')
     }
 
     tools {
@@ -15,12 +15,23 @@ pipeline {
     }
 
     stages {
-        stage('Git') {
+        stage('Clean Workspace') {
             steps {
-                echo 'Getting project from Git'
-                git branch: 'main', url: 'https://github.com/RihabHaddad/CI-CD-E-commerce-App.git', credentialsId: 'your-credentials-id'
+                deleteDir()
             }
         }
+        steps {
+                echo 'Getting project from Git'
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'CloneOption', noTags: false, reference: '', shallow: true, depth: 1, timeout: 10]],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[url: 'https://github.com/RihabHaddad/CI-CD-E-commerce-App.git']]
+                ])
+            }
+        }
+        
         stage('Build') {
             steps {
                 script {
@@ -74,10 +85,10 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 script {
-                    withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
-                        sh 'kubectl apply -f K8s/Namespace.yaml'
-                        sh 'kubectl apply -f K8s/Deployment.yaml'
-                        sh 'kubectl apply -f K8s/Service.yaml'
+                     withEnv(["KUBECONFIG=${env.KUBECONFIG}"]) {
+                        sh 'kubectl apply -f K8s/Namespace.yml'
+                        sh 'kubectl apply -f K8s/Deployment.yml'
+                        sh 'kubectl apply -f K8s/Service.yml'
                     }
                 }
             }
@@ -95,9 +106,9 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
-                        sh 'kubectl apply -f K8s/Deployment.yaml'
-                        sh 'kubectl apply -f K8s/Service.yaml'
+                     withEnv(["KUBECONFIG=${env.KUBECONFIG}"]) {
+                        sh 'kubectl apply -f K8s/Deployment.yml'
+                        sh 'kubectl apply -f K8s/Service.yml'
                     }
                 }
             }
