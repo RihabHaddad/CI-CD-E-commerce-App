@@ -18,16 +18,10 @@ pipeline {
                 deleteDir()
             }
         }
-        stage('Checkout') {
+        stage('Git') {
             steps {
                 echo 'Getting project from Git'
-                checkout([$class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [[$class: 'CloneOption', noTags: false, reference: '', shallow: true, depth: 1, timeout: 10]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[url: 'https://github.com/RihabHaddad/CI-CD-E-commerce-App.git']]
-                ])
+                git branch: 'main', url: 'https://github.com/RihabHaddad/CI-CD-E-commerce-App.git', credentialsId: 'your-credentials-id'
             }
         }
         stage('Build') {
