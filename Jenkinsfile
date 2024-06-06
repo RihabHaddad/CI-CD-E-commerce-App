@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     sh 'npm install'
-                    sh 'npm test --timeout 30000'
+                    sh 'npm test '
                 }
             }
         }
