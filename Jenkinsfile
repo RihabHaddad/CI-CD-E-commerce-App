@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     sh 'npm install'
-                    sh 'npm test '
+                    sh 'npm run test:unit '
                 }
             }
         }
