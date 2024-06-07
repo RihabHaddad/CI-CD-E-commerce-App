@@ -89,6 +89,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
                     retry(3) {
+                        sh 'kubectl apply -f K8s/Namespace.yml --kubeconfig $KUBECONFIG'
                         sh 'kubectl apply -f K8s/Deployment.yml --kubeconfig $KUBECONFIG'
                         sh 'kubectl apply -f K8s/Service.yml --kubeconfig $KUBECONFIG'
                     }
