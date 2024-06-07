@@ -6,7 +6,7 @@ beforeAll(async () => {
   const app = require('../app');
   server = app.listen(3004); 
   if (mongoose.connection.readyState === 0) {
-    await mongoose.connect('mongodb://localhost:27017/testbd', { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 30000 });
+    await mongoose.connect('mongodb://localhost:27017/testbd', { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 60000 });
   }
 });
 

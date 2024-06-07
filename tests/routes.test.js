@@ -8,7 +8,7 @@ beforeAll(async () => {
     await mongoose.connect('mongodb://localhost:27017/testbd', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000
+      serverSelectionTimeoutMS: 60000
     });
   }
   server = app.listen(4000);
