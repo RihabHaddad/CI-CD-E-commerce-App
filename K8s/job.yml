@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: seed-database
+  namespace: ecommerce
+spec:
+  template:
+    spec:
+      containers:
+      - name: seed-database
+        image: rihab26/e-commerceapp:latest
+        command: ["sh", "-c", "node seedDB/category-seed.js && node seedDB/products-seed.js"]
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongodb-service:27017/ecommerce"
+      restartPolicy: Never
+  backoffLimit: 4
+

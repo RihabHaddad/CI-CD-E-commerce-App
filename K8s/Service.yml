@@ -4,10 +4,12 @@ metadata:
   name: ecommerce-service
   namespace: ecommerce
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: ecommerce
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 3000
+      targetPort: 3001
+      nodePort: 32653
+

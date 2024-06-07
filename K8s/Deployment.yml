@@ -20,10 +20,8 @@ spec:
         image: rihab26/e-commerceapp:latest
         ports:
         - containerPort: 3000
-        env:
-        - name: NODE_ENV
-          value: "production"
-        - name: DATABASE_URL
-          value: "mongodb://localhost:27017/"
-            
-    
+      - name: node-exporter
+        image: prom/node-exporter
+        ports:
+        - containerPort: 9100
+

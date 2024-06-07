@@ -2,8 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-config
-  labels:
-    name: prometheus-config
+  namespace: ecommerce
 data:
   prometheus.yml: |
     global:
@@ -15,14 +14,13 @@ data:
         relabel_configs:
           - source_labels: [__meta_kubernetes_pod_label_app]
             action: keep
-            regex: ecommerce-app
-          - source_labels: [__meta_kubernetes_pod_container_port_name]
+            regex: ecommerce
+          - source_labels: [__meta_kubernetes_pod_container_name]
+            action: keep
+            regex: node-exporter
+          - source_labels: [__address__, __meta_kubernetes_pod_container_port_number]
             action: replace
-            target_label: __metrics_path__
-            regex: (.+)
-            replacement: /metrics
-          - source_labels: [__meta_kubernetes_pod_name]
-            action: replace
-            target_label: instance
-            regex: (.+)
-            replacement: $1
+            target_label: __address__
+            regex: (.+):9100
+            replacement: ${1}:9100
+
